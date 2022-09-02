@@ -3,7 +3,7 @@ const resultsDisplay = document.querySelector(".results");
 let currentShooterIndex = 202;
 let gridWidth = 15;
 let direction = 1;
-let invadersId;
+let invadersID;
 let goingRight = true; // default direction is right
 
 for (let i = 0; i < 225; i++) {
@@ -88,8 +88,36 @@ function moveInvaders() {
     if (squares[currentShooterIndex].classList.contains("invader", "shooter")) {
         resultsDisplay.innerHTML = "Game Over";
         // stops moving invaders
-        clearInterval(invadersId);
+        clearInterval(invadersID);
+    }
+
+    // if the invader reaches the bottom of the grid
+    for (let i = 0; i < alienInvaders.length; i++) {
+        if (alienInvaders[i] > squares.length) {
+            resultsDisplay.innerHTML = "Game Over";
+            clearInterval(invadersID);
+        }
     }
 }
 
-invadersId = setInterval(moveInvaders, 500);
+invadersID = setInterval(moveInvaders, 500);
+
+function shoot(e) {
+    let laserID;
+    let currentLaserIndex = currentShooterIndex; // wherever the shooter is, that's where the laser will start from
+
+    function moveLaser() {
+        // remove the laser, adjust its position (move it up a whole width) and redraw it
+        squares[currentLaserIndex].classList.remove("laser");
+        currentLaserIndex -= gridWidth;
+        squares[currentLaserIndex].classList.add("laser");
+    }
+
+    // move the laser
+    switch (e.key) {
+        case "w":
+            laserID = setInterval(moveLaser, 100);
+    }
+}
+
+document.addEventListener("keydown", shoot);
