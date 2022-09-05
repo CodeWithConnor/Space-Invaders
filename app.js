@@ -11,6 +11,7 @@ const state = {
     shoot: false,
     lasers: [],
     spaceshipWidth: 50,
+    cooldown: 0,
 };
 
 // General purpose functions
@@ -56,17 +57,21 @@ function updatePlayer() {
     if (state.moveRight) {
         state.xPos += 3;
     }
-    if (state.shoot) {
+    if (state.shoot && state.cooldown === 0) {
         createLaser(
             $container,
             state.xPos,
             state.spaceshipWidth / 2,
             state.yPos
         );
+        state.cooldown = 30;
     }
     const $player = document.querySelector(".player");
     // ran through bound() to check if player is in bounds of game div
     setPosition($player, bound(state.xPos), state.yPos - 10);
+    if (state.cooldown > 0) {
+        state.cooldown -= 0.5;
+    }
 }
 
 function createLaser($container, x, y) {
