@@ -38,6 +38,13 @@ function bound(x) {
     }
 }
 
+// removes laser from DOM and state
+function deleteLaser(lasers, laser, $laser) {
+    const index = lasers.indexOf(laser);
+    lasers.splice(index, 1);
+    $container.removeChild($laser);
+}
+
 // Player
 function createPlayer($container) {
     state.xPos = gameWidth / 2;
@@ -90,6 +97,12 @@ function updateLaser($container) {
     for (let i = 0; i < lasers.length; i++) {
         const laser = lasers[i];
         laser.y -= 2;
+
+        // deletes laser once it goes off screen
+        if (laser.y < -500) {
+            deleteLaser(lasers, laser, laser.$laser);
+        }
+
         setPosition(laser.$laser, laser.x, laser.y);
     }
 }
