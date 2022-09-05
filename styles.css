@@ -51,3 +51,12 @@ footer {
     background: black;
     color: white;
 }
+
+/* fix laser misalignment */
+.main .laser {
+    height: 25px;
+    position: absolute;
+    bottom: 80px;
+    left: 23px;
+    z-index: -1;
+}
