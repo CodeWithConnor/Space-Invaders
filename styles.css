@@ -1,0 +1,53 @@
+body {
+    height: 100%;
+    overflow: hidden;
+    color: rgb(100, 160, 60);
+    background-color: rgb(50, 50, 50);
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.game-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main {
+    width: 800px;
+    height: 600px;
+    background: url(img/background-blue.png);
+    animation: scroll-background 5s linear infinite;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0);
+    position: relative;
+    z-index: -2;
+}
+
+@keyframes scroll-background {
+    from {
+        background-position-y: 0px;
+    }
+    to {
+        background-position-y: 256px;
+    }
+}
+
+header {
+    text-align: center;
+    background: black;
+    color: #fff;
+    padding: 5px;
+}
+
+footer {
+    padding: 10px;
+    text-align: center;
+    font-size: 11px;
+    background: black;
+    color: white;
+}
