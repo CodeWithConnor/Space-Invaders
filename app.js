@@ -125,7 +125,8 @@ function updatePlayer() {
     if (STATE.move_right) {
         STATE.x_pos += 3;
     }
-    if (STATE.shoot && STATE.cooldown == 0) {
+    // Only shoot if cooldown is 0 and game is not over
+    if (STATE.shoot && STATE.cooldown == 0 && !STATE.gameOver) {
         createLaser(
             $container,
             STATE.x_pos - STATE.spaceship_width / 2,
@@ -270,11 +271,11 @@ function gameWon() {
 }
 
 function gameLost() {
-    counter = 1;
-    if (counter == 1) {
-        playSound("lose");
-        counter = 0;
-    }
+    // counter = 1;
+    // if (counter == 1) {
+    //     playSound("lose");
+    //     counter = 0;
+    // }
 
     hideMenu();
     document.querySelector(".lose").style.display = "block";
