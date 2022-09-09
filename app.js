@@ -258,6 +258,18 @@ function KeyRelease(event) {
     }
 }
 
+function gameWon() {
+    playSound("win");
+    hideMenu();
+    gameWon = true;
+    document.querySelector(".win").style.display = "block";
+}
+
+function gameLost() {
+    hideMenu();
+    document.querySelector(".lose").style.display = "block";
+}
+
 // Main Update Function
 function update() {
     if (!STATE.gamePaused) {
@@ -275,24 +287,6 @@ function update() {
     if (STATE.enemies.length == 0) {
         gameWon();
     }
-}
-
-function gameWon() {
-    playSound("win");
-    hideMenu();
-    gameWon = true;
-    document.querySelector(".win").style.display = "block";
-}
-
-function gameLost() {
-    // counter = 1;
-    // if (counter == 1) {
-    //     playSound("lose");
-    //     counter = 0;
-    // }
-
-    hideMenu();
-    document.querySelector(".lose").style.display = "block";
 }
 
 function restartGame() {
