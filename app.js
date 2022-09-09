@@ -222,6 +222,7 @@ function updateEnemyLaser($container) {
         if (collideRect(spaceship_rectangle, enemyLaser_rectangle)) {
             STATE.gameOver = true;
             console.log("Game Over");
+            playSound("game_over");
         }
         setPosition(
             enemyLaser.$enemyLaser,
@@ -262,16 +263,53 @@ function KeyRelease(event) {
     }
 }
 
+function hideAllEntities($container) {
+    hidePauseMenu();
+
+    // Delete all enemy ufos
+    const enemies = STATE.enemies;
+    for (let i = 0; i < enemies.length; i++) {
+        const enemy = enemies[i];
+        deleteLaser(enemies, enemy, enemy.$enemy);
+    }
+
+    // Delete all enemy lasers
+    const enemyLasers = STATE.enemyLasers;
+    for (let i = 0; i < enemyLasers.length; i++) {
+        const enemyLaser = enemyLasers[i];
+        deleteLaser(enemyLasers, enemyLaser, enemyLaser.$enemyLaser);
+    }
+
+    // Delete all friendly lasers
+    const lasers = STATE.lasers;
+    for (let i = 0; i < lasers.length; i++) {
+        const laser = lasers[i];
+        deleteLaser(lasers, laser, laser.$laser);
+    }
+
+    // Hide spaceship, banner and game window
+    document.querySelector("img.player").style.display = "none";
+    document.querySelector("body > div > header").style.display = "none";
+    document.querySelector("body > div > div > div.main").style.display =
+        "none";
+}
+
 function gameWon() {
+    hideAllEntities();
     playSound("win");
-    hideMenu();
     gameWon = true;
-    document.querySelector(".win").style.display = "block";
+
+    // Set and display p tag
+    document.querySelector("body > div > div > p").innerHTML = "YOU WON!";
+    document.querySelector("body > div > div > p").style.display = "block";
 }
 
 function gameLost() {
-    hideMenu();
-    document.querySelector(".lose").style.display = "block";
+    hideAllEntities();
+
+    // Set and display p tag
+    document.querySelector("body > div > div > p").innerHTML = "GAME OVER";
+    document.querySelector("body > div > div > p").style.display = "block";
 }
 
 // Main Update Function
@@ -288,7 +326,8 @@ function update() {
     if (STATE.gameOver) {
         gameLost();
     }
-    if (STATE.enemies.length == 0) {
+    // Check if all ufos are destroyed and it's not game over
+    if (STATE.enemies.length == 0 && !STATE.gameOver) {
         gameWon();
     }
 }
@@ -297,7 +336,7 @@ function restartGame() {
     window.location.reload();
 }
 
-function hideMenu() {
+function hidePauseMenu() {
     menu.style.display = "none";
 }
 
