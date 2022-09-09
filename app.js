@@ -15,6 +15,10 @@ const banner = document.querySelector("body > div > header");
 const menu = document.querySelector(".menu");
 
 // Misc
+function playSound(file) {
+    const audio = new Audio("sounds/" + file + ".wav");
+    audio.play();
+}
 
 const STATE = {
     x_pos: 0,
@@ -138,6 +142,7 @@ function updatePlayer() {
 
 // Player Laser
 function createLaser($container, x, y) {
+    playSound("bullet");
     const $laser = document.createElement("img");
     $laser.src = "img/laser.png";
     $laser.className = "laser";
@@ -163,6 +168,7 @@ function updateLaser($container) {
             const enemy_rectangle = enemy.$enemy.getBoundingClientRect();
             // Check for collision between ufo/laser
             if (collideRect(enemy_rectangle, laser_rectangle)) {
+                playSound("ufo_hit");
                 deleteLaser(lasers, laser, laser.$laser);
                 const index = enemies.indexOf(enemy);
                 enemies.splice(index, 1);
@@ -249,14 +255,29 @@ function update() {
     window.requestAnimationFrame(update);
 
     if (STATE.gameOver) {
-        hideMenu();
-        document.querySelector(".lose").style.display = "block";
+        gameLost();
     }
     if (STATE.enemies.length == 0) {
-        hideMenu();
-        gameWon = true;
-        document.querySelector(".win").style.display = "block";
+        gameWon();
     }
+}
+
+function gameWon() {
+    playSound("win");
+    hideMenu();
+    gameWon = true;
+    document.querySelector(".win").style.display = "block";
+}
+
+function gameLost() {
+    counter = 1;
+    if (counter == 1) {
+        playSound("lose");
+        counter = 0;
+    }
+
+    hideMenu();
+    document.querySelector(".lose").style.display = "block";
 }
 
 function restartGame() {
