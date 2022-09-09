@@ -73,12 +73,15 @@ function bound(x) {
 }
 
 function collideRect(rect1, rect2) {
-    return !(
-        rect2.left > rect1.right ||
-        rect2.right < rect1.left ||
-        rect2.top > rect1.bottom ||
-        rect2.bottom < rect1.top
-    );
+    // Check if game over first (more memory efficient & avoids sound spam)
+    if (!STATE.gameOver) {
+        return !(
+            rect2.left > rect1.right ||
+            rect2.right < rect1.left ||
+            rect2.top > rect1.bottom ||
+            rect2.bottom < rect1.top
+        );
+    }
 }
 
 // Enemy
@@ -218,6 +221,7 @@ function updateEnemyLaser($container) {
             .getBoundingClientRect();
         if (collideRect(spaceship_rectangle, enemyLaser_rectangle)) {
             STATE.gameOver = true;
+            console.log("Game Over");
         }
         setPosition(
             enemyLaser.$enemyLaser,
