@@ -8,13 +8,27 @@
         <link rel="stylesheet" href="styles.css" />
     </head>
     <body>
-        <div class="wrapper">
-            <header>Space Invaders</header>
+        <div class="wrap">
+            <header>Space Invaders | Score: 0/18</header>
             <div class="game-wrapper">
                 <div class="main"></div>
+                <div class="lose">
+                    <h1>GAME OVER</h1>
+                    <h2>Better luck next time!</h2>
+                    <button class="btn" onclick="restartGame()">Restart</button>
+                </div>
+                <div class="win">
+                    <h1>YOU WIN!</h1>
+                    <h2>Winner winner chicken dinner!</h2>
+                    <button class="btn" onclick="restartGame()">Restart</button>
+                </div>
+                <div class="menu">
+                    <h1>Menu</h1>
+                    <button class="btn">Resume</button>
+                    <button class="btn" onclick="restartGame()">Restart</button>
+                </div>
             </div>
             <script src="app.js"></script>
-            <footer></footer>
         </div>
     </body>
 </html>
