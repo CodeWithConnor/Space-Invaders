@@ -36,6 +36,7 @@ const STATE = {
     enemy_cooldown: 0,
     gameOver: false,
     gameWon: true,
+    gamePaused: false,
     score: 0,
 };
 
@@ -43,6 +44,11 @@ const STATE = {
 // function playSound(sound) {
 //     let soundFile = () => new Audio("").play()
 // }
+
+function unpauseGame() {
+    STATE.gamePaused = false;
+    menu.style.display = "none";
+}
 
 function setPosition($element, x, y) {
     $element.style.transform = `translate(${x}px, ${y}px)`;
@@ -89,20 +95,22 @@ function createEnemy($container, x, y) {
 }
 
 function updateEnemies($container) {
-    const dx = Math.sin(Date.now() / 1000) * 40;
-    const dy = Math.cos(Date.now() / 1000) * 30;
-    const enemies = STATE.enemies;
-    for (let i = 0; i < enemies.length; i++) {
-        const enemy = enemies[i];
-        var a = enemy.x + dx;
-        var b = enemy.y + dy;
-        setPosition(enemy.$enemy, a, b);
-        enemy.cooldown = Math.random(0, 100);
-        if (enemy.enemy_cooldown == 0) {
-            createEnemyLaser($container, a, b);
-            enemy.enemy_cooldown = Math.floor(Math.random() * 50) + 100;
+    if (!STATE.gamePaused) {
+        const dx = Math.sin(Date.now() / 1000) * 40;
+        const dy = Math.cos(Date.now() / 1000) * 30;
+        const enemies = STATE.enemies;
+        for (let i = 0; i < enemies.length; i++) {
+            const enemy = enemies[i];
+            var a = enemy.x + dx;
+            var b = enemy.y + dy;
+            setPosition(enemy.$enemy, a, b);
+            enemy.cooldown = Math.random(0, 100);
+            if (enemy.enemy_cooldown == 0) {
+                createEnemyLaser($container, a, b);
+                enemy.enemy_cooldown = Math.floor(Math.random() * 50) + 100;
+            }
+            enemy.enemy_cooldown -= 0.5;
         }
-        enemy.enemy_cooldown -= 0.5;
     }
 }
 
@@ -235,6 +243,7 @@ function KeyPress(event) {
     } else if (event.keyCode === KEY_SPACE) {
         STATE.shoot = true;
     } else if (event.keyCode === KEY_ESC) {
+        STATE.gamePaused = true;
         menu.style.display = "block";
     }
 }
@@ -251,10 +260,12 @@ function KeyRelease(event) {
 
 // Main Update Function
 function update() {
-    updatePlayer();
-    updateEnemies($container);
-    updateLaser($container);
-    updateEnemyLaser($container);
+    if (!STATE.gamePaused) {
+        updatePlayer();
+        updateEnemies($container);
+        updateLaser($container);
+        updateEnemyLaser($container);
+    }
 
     window.requestAnimationFrame(update);
 
