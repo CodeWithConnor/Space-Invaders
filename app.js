@@ -167,8 +167,11 @@ function updateLaser($container) {
         for (let j = 0; j < enemies.length; j++) {
             const enemy = enemies[j];
             const enemy_rectangle = enemy.$enemy.getBoundingClientRect();
-            // Check for collision between ufo/laser
-            if (collideRect(enemy_rectangle, laser_rectangle)) {
+            // Check for collision between ufo/laser if game not over
+            if (
+                collideRect(enemy_rectangle, laser_rectangle) &&
+                !STATE.gameOver
+            ) {
                 playSound("ufo_hit");
                 deleteLaser(lasers, laser, laser.$laser);
                 const index = enemies.indexOf(enemy);
