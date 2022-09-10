@@ -158,6 +158,12 @@ p {
     animation-iteration-count: infinite;
 }
 
+/* Elapsed timer */
+#hour::after,
+#min::after {
+    content: ":";
+}
+
 @keyframes example {
     0% {
         color: lime;

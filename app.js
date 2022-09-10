@@ -38,13 +38,47 @@ const STATE = {
     gameWon: true,
     gamePaused: false,
     score: 0,
+    elapsedTime: 0,
 };
 
-// General purpose functions
-// function playSound(sound) {
-//     let soundFile = () => new Audio("").play()
-// }
+// Timer functions
+function setSec() {
+    if (sec >= 60) {
+        setMin();
+        sec = 0;
+    }
+    if (sec < 10) {
+        document.getElementById("sec").innerHTML = "0" + sec;
+    } else {
+        document.getElementById("sec").innerHTML = sec;
+    }
+    sec = sec + 1;
+    secVar = setTimeout(setSec, 1000);
+}
 
+function setMin() {
+    if (min >= 60) {
+        setHour();
+        min = 0;
+    }
+    if (min < 10) {
+        document.getElementById("min").innerHTML = "0" + min;
+    } else {
+        document.getElementById("min").innerHTML = min;
+    }
+    min = min + 1;
+}
+
+function setHour() {
+    if (hour < 10) {
+        document.getElementById("hour").innerHTML = "0" + hour;
+    } else {
+        document.getElementById("hour").innerHTML = hour;
+    }
+    hour = hour + 1;
+}
+
+// General purpose functions
 function unpauseGame() {
     STATE.gamePaused = false;
     menu.style.display = "none";
@@ -189,7 +223,7 @@ function updateLaser($container) {
                 enemies.splice(index, 1);
                 $container.removeChild(enemy.$enemy);
                 STATE.score++;
-                banner.innerHTML = `Space Invaders | Score: ${STATE.score}/18`;
+                banner.innerHTML = `Space Invaders | Score: ${STATE.score}/18 | Time: `;
             }
         }
     }
@@ -300,7 +334,7 @@ function gameWon() {
     gameWon = true;
 
     // Set and display p tag
-    document.querySelector("body > div > div > p").innerHTML = "YOU WON!";
+    document.querySelector("body > div > div > p").innerHTML = "YOU WIN!";
     document.querySelector("body > div > div > p").style.display = "block";
 }
 
@@ -353,6 +387,14 @@ function createEnemies($container) {
 const $container = document.querySelector(".main");
 createPlayer($container);
 createEnemies($container);
+
+// Start timer
+var sec = 0,
+    min = 1,
+    hour = 1;
+var secVar, minVar, hourVar;
+
+setSec();
 
 // Key Press Event Listener
 window.addEventListener("keydown", KeyPress);
