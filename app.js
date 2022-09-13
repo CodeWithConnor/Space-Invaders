@@ -209,7 +209,7 @@ function updateLaser($container) {
     const lasers = STATE.lasers;
     for (let i = 0; i < lasers.length; i++) {
         const laser = lasers[i];
-        laser.y -= 3;
+        laser.y -= 2;
         if (laser.y < 0) {
             deleteLaser(lasers, laser, laser.$laser);
         }
@@ -260,10 +260,7 @@ function updateEnemyLaser($container) {
         const spaceship_rectangle = document
             .querySelector(".player")
             .getBoundingClientRect();
-        if (
-            collideRect(spaceship_rectangle, enemyLaser_rectangle) &&
-            !STATE.gameFinished
-        ) {
+        if (collideRect(spaceship_rectangle, enemyLaser_rectangle)) {
             STATE.gameOver = true;
             playSound("game_over");
         }
