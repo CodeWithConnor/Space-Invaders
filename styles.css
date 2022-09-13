@@ -1,6 +1,7 @@
 * {
     padding: 0;
     margin: 0;
+    /* border: 1px solid white; */
 }
 
 html {
@@ -11,7 +12,7 @@ body {
     height: 100%;
     overflow: hidden;
     font: 16px sans-serif;
-    background: url(img/background-blue.png);
+    background: url(img/background.png);
     animation: scroll-background 5s linear infinite;
 
     display: flex;
@@ -33,9 +34,10 @@ body {
 }
 
 .main {
-    width: 800px;
+    /* border: 1px solid white; */
+    width: 696px;
     height: 600px;
-    background: url(img/background-blue.png);
+    background: url(img/background.png);
     animation: scroll-background 5s linear infinite;
     position: relative;
     z-index: -2;
@@ -74,20 +76,22 @@ footer {
 
 .main .laser {
     position: absolute;
-    margin-left: -2.5px;
-    height: 25px;
+    margin-left: -2.25px;
+    margin-top: -20px;
+    height: 35px;
     /* default z-index is 0*/
     z-index: -1;
 }
 
 .main .enemy {
     position: absolute;
+    /* border: 1px solid white; */
 }
 
 .main .enemyLaser {
     position: absolute;
     margin-left: -2.5px;
-    height: 20px;
+    height: 30px;
     /* default z-index is 0*/
     z-index: -1;
 }

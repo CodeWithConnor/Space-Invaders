@@ -7,14 +7,21 @@ const KEY_SPACE = 32;
 const KEY_ESC = 27;
 
 // Game properties
-const GAME_WIDTH = 800;
+const GAME_WIDTH = 696;
 const GAME_HEIGHT = 600;
+
+// Timer
+var sec = 0,
+    min = 1,
+    hour = 1;
+var secVar, minVar, hourVar;
 
 // UI
 const banner = document.querySelector("body > div > header");
 const menu = document.querySelector(".menu");
+const score = document.querySelector("#score");
+const enemyCount = document.querySelector("#enemy_count");
 
-// Misc
 function playSound(file) {
     const audio = new Audio("sounds/" + file + ".wav");
     audio.play();
@@ -35,7 +42,7 @@ const STATE = {
     number_of_enemies: 16,
     enemy_cooldown: 0,
     gameOver: false,
-    gameWon: true,
+    gameFinished: true,
     gamePaused: false,
     score: 0,
     elapsedTime: 0,
@@ -202,7 +209,7 @@ function updateLaser($container) {
     const lasers = STATE.lasers;
     for (let i = 0; i < lasers.length; i++) {
         const laser = lasers[i];
-        laser.y -= 2;
+        laser.y -= 3;
         if (laser.y < 0) {
             deleteLaser(lasers, laser, laser.$laser);
         }
@@ -223,7 +230,7 @@ function updateLaser($container) {
                 enemies.splice(index, 1);
                 $container.removeChild(enemy.$enemy);
                 STATE.score++;
-                banner.innerHTML = `Space Invaders | Score: ${STATE.score}/18 | Time: `;
+                score.innerHTML = STATE.score;
             }
         }
     }
@@ -253,9 +260,11 @@ function updateEnemyLaser($container) {
         const spaceship_rectangle = document
             .querySelector(".player")
             .getBoundingClientRect();
-        if (collideRect(spaceship_rectangle, enemyLaser_rectangle)) {
+        if (
+            collideRect(spaceship_rectangle, enemyLaser_rectangle) &&
+            !STATE.gameFinished
+        ) {
             STATE.gameOver = true;
-            console.log("Game Over");
             playSound("game_over");
         }
         setPosition(
@@ -328,10 +337,10 @@ function hideAllEntities($container) {
         "none";
 }
 
-function gameWon() {
+function gameFinished() {
     hideAllEntities();
     playSound("win");
-    gameWon = true;
+    gameFinished = true;
 
     // Set and display p tag
     document.querySelector("body > div > div > p").innerHTML = "YOU WIN!";
@@ -362,7 +371,7 @@ function update() {
     }
     // Check if all ufos are destroyed and it's not game over
     if (STATE.enemies.length == 0 && !STATE.gameOver) {
-        gameWon();
+        gameFinished();
     }
 }
 
@@ -375,10 +384,10 @@ function hidePauseMenu() {
 }
 
 function createEnemies($container) {
-    for (var i = 0; i <= STATE.number_of_enemies / 2; i++) {
+    for (var i = 0; i < STATE.number_of_enemies / 2; i++) {
         createEnemy($container, i * 80, 100);
     }
-    for (var i = 0; i <= STATE.number_of_enemies / 2; i++) {
+    for (var i = 0; i < STATE.number_of_enemies / 2; i++) {
         createEnemy($container, i * 80, 180);
     }
 }
@@ -387,13 +396,9 @@ function createEnemies($container) {
 const $container = document.querySelector(".main");
 createPlayer($container);
 createEnemies($container);
+enemyCount.innerHTML = STATE.number_of_enemies;
 
 // Start timer
-var sec = 0,
-    min = 1,
-    hour = 1;
-var secVar, minVar, hourVar;
-
 setSec();
 
 // Key Press Event Listener
