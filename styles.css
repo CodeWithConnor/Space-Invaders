@@ -34,7 +34,6 @@ body {
 }
 
 .main {
-    /* border: 1px solid white; */
     width: 696px;
     height: 600px;
     background: url(img/background.png);
@@ -160,6 +159,58 @@ p {
     animation-name: example;
     animation-duration: 1s;
     animation-iteration-count: infinite;
+}
+
+/* TUTORIAL */
+#tutorial {
+    background: #101f14;
+    color: #34c346;
+    width: 500px;
+    height: 450px;
+    border-radius: 50px;
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    /* position the div in center */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#tutorial p {
+    display: block !important;
+    font-size: 4.5em;
+    animation-name: none;
+}
+
+#tutorial p.title {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    font-size: 3em;
+}
+
+#tutorial #controls p {
+    font-size: 2em;
+}
+
+#tutorial #controls {
+    margin-bottom: 30px;
+}
+
+#tutorial button {
+    font-family: "VT323";
+    text-align: center;
+    background: #34c346;
+    color: #101f14;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 1.6em;
+    cursor: pointer;
 }
 
 /* Elapsed timer */

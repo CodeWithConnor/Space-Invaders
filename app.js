@@ -1,6 +1,4 @@
 // Keys
-const KEY_UP = 38;
-const KEY_DOWN = 40;
 const KEY_RIGHT = 68;
 const KEY_LEFT = 65;
 const KEY_SPACE = 32;
@@ -21,6 +19,8 @@ const banner = document.querySelector("body > div > header");
 const menu = document.querySelector(".menu");
 const score = document.querySelector("#score");
 const enemyCount = document.querySelector("#enemy_count");
+const gameStateText = document.querySelector("body > div > div > p");
+const tutorialDiv = document.querySelector("#tutorial");
 
 function playSound(file) {
     const audio = new Audio("sounds/" + file + ".wav");
@@ -42,7 +42,7 @@ const STATE = {
     number_of_enemies: 16,
     enemy_cooldown: 0,
     gameOver: false,
-    gameFinished: true,
+    gameWon: true,
     gamePaused: false,
     score: 0,
     elapsedTime: 0,
@@ -143,6 +143,7 @@ function updateEnemies($container) {
         const dx = Math.sin(Date.now() / 1000) * 40;
         const dy = Math.cos(Date.now() / 1000) * 30;
         const enemies = STATE.enemies;
+        // console.log(enemies.length);
         for (let i = 0; i < enemies.length; i++) {
             const enemy = enemies[i];
             var a = enemy.x + dx;
@@ -260,7 +261,10 @@ function updateEnemyLaser($container) {
         const spaceship_rectangle = document
             .querySelector(".player")
             .getBoundingClientRect();
-        if (collideRect(spaceship_rectangle, enemyLaser_rectangle)) {
+        if (
+            collideRect(spaceship_rectangle, enemyLaser_rectangle) &&
+            tutorialDiv.style.display == "none"
+        ) {
             STATE.gameOver = true;
             playSound("game_over");
         }
@@ -336,27 +340,27 @@ function hideAllEntities($container) {
         "none";
 }
 
-function gameFinished() {
+function gameWon() {
     hideAllEntities();
     playSound("win");
-    gameFinished = true;
+    gameWon = true;
 
     // Set and display p tag
-    document.querySelector("body > div > div > p").innerHTML = "YOU WIN!";
-    document.querySelector("body > div > div > p").style.display = "block";
+    gameStateText.innerHTML = "YOU WIN!";
+    gameStateText.style.display = "block";
 }
 
 function gameLost() {
     hideAllEntities();
 
     // Set and display p tag
-    document.querySelector("body > div > div > p").innerHTML = "GAME OVER";
-    document.querySelector("body > div > div > p").style.display = "block";
+    gameStateText.innerHTML = "GAME OVER";
+    gameStateText.style.display = "block";
 }
 
 // Main Update Function
 function update() {
-    if (!STATE.gamePaused) {
+    if (!STATE.gamePaused && tutorialDiv.style.display === "none") {
         updatePlayer();
         updateEnemies($container);
         updateLaser($container);
@@ -370,7 +374,7 @@ function update() {
     }
     // Check if all ufos are destroyed and it's not game over
     if (STATE.enemies.length == 0 && !STATE.gameOver) {
-        gameFinished();
+        gameWon();
     }
 }
 
@@ -391,6 +395,16 @@ function createEnemies($container) {
     }
 }
 
+function startGame() {
+    tutorialDiv.style.display = "none";
+}
+
+if (tutorialDiv.style.display != "none") {
+    console.log("Tutorial is visible");
+} else {
+    console.log("Tutorial is hidden");
+}
+
 // Initialize the Game
 const $container = document.querySelector(".main");
 createPlayer($container);
@@ -403,4 +417,9 @@ setSec();
 // Key Press Event Listener
 window.addEventListener("keydown", KeyPress);
 window.addEventListener("keyup", KeyRelease);
+
+// Hide spaceship, banner and game window
+// document.querySelector("img.player").style.display = "none";
+// document.querySelector("body > div > header").style.display = "none";
+
 update();
