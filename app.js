@@ -119,15 +119,19 @@ function bound(x) {
     }
 }
 
+// Returns true if collision is detected
 function collideRect(rect1, rect2) {
-    // Returns true if collision is detected
     if (!STATE.gameOver) {
-        return !(
+        // collision = true only if collision is detected
+        var collision = !(
             rect2.left > rect1.right ||
             rect2.right < rect1.left ||
             rect2.top > rect1.bottom ||
             rect2.bottom < rect1.top
         );
+        if (collision) {
+            return true;
+        }
     }
 }
 
@@ -149,7 +153,6 @@ function updateEnemies($container) {
         const dx = Math.sin(Date.now() / 1000) * 40;
         const dy = Math.cos(Date.now() / 1000) * 30;
         const enemies = STATE.enemies;
-        // console.log(enemies.length);
         for (let i = 0; i < enemies.length; i++) {
             const enemy = enemies[i];
             var a = enemy.x + dx;
@@ -342,8 +345,15 @@ function hideAllEntities($container) {
 }
 
 function gameWon() {
-    hideAllEntities();
     playSound("win");
+    confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: {
+            y: 0.6
+        }
+    });
+    hideAllEntities();
     gameWon = true;
 
     // Set and display p tag
