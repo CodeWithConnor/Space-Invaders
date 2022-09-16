@@ -24,9 +24,7 @@ const tutorialDiv = document.querySelector("#tutorial");
 const gameWrapper = document.querySelector("body > div > div.game-wrapper");
 
 // Assets
-const spaceship = document.querySelector(
-    "body > div > div.game-wrapper > div.main > img.player"
-);
+const spaceship = document.querySelector("body > div > div.game-wrapper > div.main > img.player");
 
 function playSound(file) {
     const audio = new Audio("sounds/" + file + ".wav");
@@ -53,6 +51,7 @@ const STATE = {
     score: 0,
     elapsedTime: 0,
     completedTutorial: false,
+    lives: 3
 };
 
 // Timer functions
@@ -121,7 +120,7 @@ function bound(x) {
 }
 
 function collideRect(rect1, rect2) {
-    // Check if game over first (more memory efficient & avoids sound spam)
+    // Returns true if collision is detected
     if (!STATE.gameOver) {
         return !(
             rect2.left > rect1.right ||
@@ -187,11 +186,7 @@ function updatePlayer() {
     }
     // Only shoot if cooldown is 0 and game is not over
     if (STATE.shoot && STATE.cooldown == 0 && !STATE.gameOver) {
-        createLaser(
-            $container,
-            STATE.x_pos - STATE.spaceship_width / 2,
-            STATE.y_pos
-        );
+        createLaser($container, STATE.x_pos - STATE.spaceship_width / 2, STATE.y_pos);
         STATE.cooldown = 30;
     }
     const $player = document.querySelector(".player");
@@ -228,10 +223,7 @@ function updateLaser($container) {
             const enemy = enemies[j];
             const enemy_rectangle = enemy.$enemy.getBoundingClientRect();
             // Check for collision between ufo/laser if game not over
-            if (
-                collideRect(enemy_rectangle, laser_rectangle) &&
-                !STATE.gameOver
-            ) {
+            if (collideRect(enemy_rectangle, laser_rectangle) && !STATE.gameOver) {
                 playSound("ufo_hit");
                 deleteLaser(lasers, laser, laser.$laser);
                 const index = enemies.indexOf(enemy);
@@ -263,23 +255,23 @@ function updateEnemyLaser($container) {
         if (enemyLaser.y > GAME_HEIGHT - 30) {
             deleteLaser(enemyLasers, enemyLaser, enemyLaser.$enemyLaser);
         }
-        const enemyLaser_rectangle =
-            enemyLaser.$enemyLaser.getBoundingClientRect();
-        const spaceship_rectangle = document
-            .querySelector(".player")
-            .getBoundingClientRect();
-        if (
-            collideRect(spaceship_rectangle, enemyLaser_rectangle) &&
-            tutorialDiv.style.display == "none"
-        ) {
-            STATE.gameOver = true;
-            playSound("game_over");
+        const enemyLaser_rectangle = enemyLaser.$enemyLaser.getBoundingClientRect();
+        const spaceship_rectangle = document.querySelector(".player").getBoundingClientRect();
+        // If there is a collision between spaceship and enemy laser
+        if (collideRect(spaceship_rectangle, enemyLaser_rectangle)) {
+            console.log("before", STATE.lives);
+            // deduct a life
+            STATE.lives--;
+            console.log("after", STATE.lives);
+            // When there is only 1 life left
+            if (STATE.lives == 1) {
+                console.log("in if statememnt", STATE.lives);
+                // End the game
+                STATE.gameOver = true;
+                playSound("game_over");
+            }
         }
-        setPosition(
-            enemyLaser.$enemyLaser,
-            enemyLaser.x + STATE.enemy_width / 2,
-            enemyLaser.y + 15
-        );
+        setPosition(enemyLaser.$enemyLaser, enemyLaser.x + STATE.enemy_width / 2, enemyLaser.y + 15);
     }
 }
 
@@ -346,8 +338,7 @@ function hideAllEntities($container) {
     // Hide spaceship, banner and game window
     document.querySelector("img.player").style.display = "none";
     document.querySelector("body > div > header").style.display = "none";
-    document.querySelector("body > div > div > div.main").style.display =
-        "none";
+    document.querySelector("body > div > div > div.main").style.display = "none";
 }
 
 function gameWon() {
@@ -406,10 +397,13 @@ function createEnemies($container) {
 }
 
 function startGame() {
-    // Hide tutorial div and show game div
+    // Hide tutorial div and show banner/game div
     STATE.completedTutorial = true;
     tutorialDiv.style.display = "none";
+    banner.style.display = "block";
     gameWrapper.style.display = "flex";
+    // Start timer
+    setSec();
 }
 
 // Initialize the Game
@@ -418,15 +412,8 @@ createPlayer($container);
 createEnemies($container);
 enemyCount.innerHTML = STATE.number_of_enemies;
 
-// Start timer
-setSec();
-
 // Key Press Event Listener
 window.addEventListener("keydown", KeyPress);
 window.addEventListener("keyup", KeyRelease);
-
-// Hide spaceship, banner and game window
-// document.querySelector("img.player").style.display = "none";
-// document.querySelector("body > div > header").style.display = "none";
 
 update();

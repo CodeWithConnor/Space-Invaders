@@ -43,6 +43,7 @@ body {
 }
 
 header {
+    display: none;
     width: 100vw;
     text-align: center;
     background: #101f14;
