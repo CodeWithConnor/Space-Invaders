@@ -21,6 +21,12 @@ const score = document.querySelector("#score");
 const enemyCount = document.querySelector("#enemy_count");
 const gameStateText = document.querySelector("body > div > div > p");
 const tutorialDiv = document.querySelector("#tutorial");
+const gameWrapper = document.querySelector("body > div > div.game-wrapper");
+
+// Assets
+const spaceship = document.querySelector(
+    "body > div > div.game-wrapper > div.main > img.player"
+);
 
 function playSound(file) {
     const audio = new Audio("sounds/" + file + ".wav");
@@ -46,6 +52,7 @@ const STATE = {
     gamePaused: false,
     score: 0,
     elapsedTime: 0,
+    completedTutorial: false,
 };
 
 // Timer functions
@@ -294,8 +301,11 @@ function KeyPress(event) {
     } else if (event.keyCode === KEY_SPACE) {
         STATE.shoot = true;
     } else if (event.keyCode === KEY_ESC) {
-        STATE.gamePaused = true;
-        menu.style.display = "block";
+        // only pause if user has completed tutorial
+        if (STATE.completedTutorial) {
+            STATE.gamePaused = true;
+            menu.style.display = "block";
+        }
     }
 }
 
@@ -396,13 +406,10 @@ function createEnemies($container) {
 }
 
 function startGame() {
+    // Hide tutorial div and show game div
+    STATE.completedTutorial = true;
     tutorialDiv.style.display = "none";
-}
-
-if (tutorialDiv.style.display != "none") {
-    console.log("Tutorial is visible");
-} else {
-    console.log("Tutorial is hidden");
+    gameWrapper.style.display = "flex";
 }
 
 // Initialize the Game
