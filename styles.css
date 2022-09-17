@@ -153,7 +153,8 @@ footer {
     margin-bottom: 10px;
 }
 
-.menu button {
+.menu button,
+#customise button {
     text-align: center;
     background: #34c346;
     color: #101f14;
@@ -244,6 +245,66 @@ p {
     padding: 10px 20px;
     font-size: 1.6em;
     cursor: pointer;
+}
+
+/* PLAYER CUSTOMISATION */
+#customise {
+    width: 783px;
+    height: 332px;
+    background: #0e1b11;
+    border-radius: 50px;
+    padding: 5px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: column;
+
+    /* position the div in center */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#customise p {
+    display: block !important;
+    color: #05c04d;
+    font-size: 3em;
+    animation-name: none;
+}
+
+#customise #player-wrapper {
+    width: 700px;
+    height: 150px;
+    background: #101f14;
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+#customise .player {
+    width: 125px;
+    height: 125px;
+    background: #0e1b11;
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+#customise .player:hover {
+    outline: 3px solid #0c180f;
+}
+
+#customise .player: {
+    border: 3px solid #0c180f;
+}
+
+#customise .player img {
+    width: 75px;
 }
 
 /* Elapsed timer */
