@@ -46,7 +46,7 @@ const STATE = {
     number_of_enemies: 16,
     enemy_cooldown: 0,
     gameOver: false,
-    gameWon: true,
+    gameWon: false,
     gamePaused: false,
     score: 0,
     elapsedTime: 0,
@@ -121,15 +121,18 @@ function bound(x) {
 
 // Returns true if collision is detected
 function collideRect(rect1, rect2) {
-    if (!STATE.gameOver) {
-        // collision = true only if collision is detected
+    // Checks first if game is still in progress
+    if (!STATE.gameOver && !STATE.gameWon) {
+        // collision will equal true only if collision is detected
         var collision = !(
             rect2.left > rect1.right ||
             rect2.right < rect1.left ||
             rect2.top > rect1.bottom ||
             rect2.bottom < rect1.top
         );
+        // Checking if collision is true first before returning avoids continuous collision detection spam
         if (collision) {
+            console.log("returned true");
             return true;
         }
     }
@@ -157,7 +160,9 @@ function updateEnemies($container) {
             const enemy = enemies[i];
             var a = enemy.x + dx;
             var b = enemy.y + dy;
+            // If the game isn't paused
             if (!STATE.gamePaused) {
+                // Update the enemy's position
                 setPosition(enemy.$enemy, a, b);
             }
             enemy.cooldown = Math.random(0, 100);
@@ -264,13 +269,10 @@ function updateEnemyLaser($container) {
         const spaceship_rectangle = document.querySelector(".player").getBoundingClientRect();
         // If there is a collision between spaceship and enemy laser
         if (collideRect(spaceship_rectangle, enemyLaser_rectangle)) {
-            console.log("before", STATE.lives);
             // deduct a life
             STATE.lives--;
-            console.log("after", STATE.lives);
             // When there is only 1 life left
             if (STATE.lives == 1) {
-                console.log("in if statememnt", STATE.lives);
                 // End the game
                 playSound("game_over");
                 STATE.gameOver = true;
@@ -348,31 +350,35 @@ function hideAllEntities($container) {
 }
 
 function gameWon() {
-    playSound("win");
-    confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: {
-            y: 0.6
-        }
-    });
-    hideAllEntities();
-    gameWon = true;
+    // only proceed if game is not already over (avoids func call from collisions after game has already ended)
+    if (!STATE.gameOver) {
+        playSound("win");
+        hideAllEntities();
+        gameWon = true;
 
-    // Set and display p tag
-    gameStateText.innerHTML = "YOU WIN!";
-    gameStateText.style.display = "block";
+        // Set and display p tag
+        gameStateText.innerHTML = "YOU WIN!";
+        gameStateText.style.display = "block";
 
-    // Send user back to main menu after 5 seconds
-    setTimeout(restartGame, 4950);
+        confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: {
+                y: 0.6
+            }
+        });
+
+        // Send user back to main menu after 4.95 seconds
+        setTimeout(restartGame, 4950);
+    }
 }
 
 function gameLost() {
-    hideAllEntities();
-
-    // Set and display p tag
-    gameStateText.innerHTML = "GAME OVER";
-    gameStateText.style.display = "block";
+    if (!STATE.gameWon) {
+        hideAllEntities();
+        gameStateText.innerHTML = "GAME OVER";
+        gameStateText.style.display = "block";
+    }
 }
 
 // Main Update Function
@@ -388,7 +394,6 @@ function update() {
 
     if (STATE.gameOver) {
         gameLost();
-        console.log("game over");
     }
     // Check if all ufos are destroyed and it's not game over
     if (STATE.enemies.length == 0 && !STATE.gameOver) {
