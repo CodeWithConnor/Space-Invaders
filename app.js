@@ -157,7 +157,9 @@ function updateEnemies($container) {
             const enemy = enemies[i];
             var a = enemy.x + dx;
             var b = enemy.y + dy;
-            setPosition(enemy.$enemy, a, b);
+            if (!STATE.gamePaused) {
+                setPosition(enemy.$enemy, a, b);
+            }
             enemy.cooldown = Math.random(0, 100);
             if (enemy.enemy_cooldown == 0) {
                 createEnemyLaser($container, a, b);
@@ -270,8 +272,9 @@ function updateEnemyLaser($container) {
             if (STATE.lives == 1) {
                 console.log("in if statememnt", STATE.lives);
                 // End the game
-                STATE.gameOver = true;
                 playSound("game_over");
+                STATE.gameOver = true;
+                setTimeout(restartGame, 2650);
             }
         }
         setPosition(enemyLaser.$enemyLaser, enemyLaser.x + STATE.enemy_width / 2, enemyLaser.y + 15);
@@ -359,6 +362,9 @@ function gameWon() {
     // Set and display p tag
     gameStateText.innerHTML = "YOU WIN!";
     gameStateText.style.display = "block";
+
+    // Send user back to main menu after 5 seconds
+    setTimeout(restartGame, 4950);
 }
 
 function gameLost() {
@@ -382,6 +388,7 @@ function update() {
 
     if (STATE.gameOver) {
         gameLost();
+        console.log("game over");
     }
     // Check if all ufos are destroyed and it's not game over
     if (STATE.enemies.length == 0 && !STATE.gameOver) {
