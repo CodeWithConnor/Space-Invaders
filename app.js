@@ -22,6 +22,7 @@ const enemyCount = document.querySelector("#enemy_count");
 const gameStateText = document.querySelector("body > div > div > p");
 const tutorialDiv = document.querySelector("#tutorial");
 const gameWrapper = document.querySelector("body > div > div.game-wrapper");
+const customisationDiv = document.querySelector("#customise");
 
 // Assets
 const spaceship = document.querySelector("body > div > div.game-wrapper > div.main > img.player");
@@ -383,7 +384,7 @@ function gameLost() {
 
 // Main Update Function
 function update() {
-    if (!STATE.gamePaused && tutorialDiv.style.display === "none") {
+    if (!STATE.gamePaused && tutorialDiv.style.display === "none" && customisationDiv.style.display === "none") {
         updatePlayer();
         updateEnemies($container);
         updateLaser($container);
@@ -418,10 +419,16 @@ function createEnemies($container) {
     }
 }
 
-function startGame() {
-    // Hide tutorial div and show banner/game div
-    STATE.completedTutorial = true;
+function showCustomisation() {
+    // Hide tutorial div and show customisation div
     tutorialDiv.style.display = "none";
+    customisationDiv.style.display = "flex";
+}
+
+function startGame() {
+    // Hide customisation div and show banner/game div
+    STATE.completedTutorial = true;
+    customisationDiv.style.display = "none";
     banner.style.display = "block";
     gameWrapper.style.display = "flex";
     // Start timer
