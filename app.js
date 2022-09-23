@@ -58,6 +58,7 @@ const STATE = {
 
 // Timer functions
 function setSec() {
+    if (!STATE.gamePaused) {
     if (sec >= 60) {
         setMin();
         sec = 0;
@@ -67,11 +68,14 @@ function setSec() {
     } else {
         document.getElementById("sec").innerHTML = sec;
     }
-    sec = sec + 1;
+        sec = sec + 1;
+    }
+   
     secVar = setTimeout(setSec, 1000);
 }
 
 function setMin() {
+    if (!STATE.gamePaused) {
     if (min >= 60) {
         setHour();
         min = 0;
@@ -81,16 +85,21 @@ function setMin() {
     } else {
         document.getElementById("min").innerHTML = min;
     }
-    min = min + 1;
+        min = min + 1;
+    }
+   
 }
 
 function setHour() {
+    if (!STATE.gamePaused) {
     if (hour < 10) {
         document.getElementById("hour").innerHTML = "0" + hour;
     } else {
         document.getElementById("hour").innerHTML = hour;
     }
-    hour = hour + 1;
+        hour = hour + 1;
+    }
+  
 }
 
 // General purpose functions
