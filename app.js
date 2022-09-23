@@ -23,6 +23,7 @@ const gameStateText = document.querySelector("body > div > div > p");
 const tutorialDiv = document.querySelector("#tutorial");
 const gameWrapper = document.querySelector("body > div > div.game-wrapper");
 const customisationDiv = document.querySelector("#customise");
+const lives = document.querySelector("#lives")
 
 // Assets
 const spaceship = document.querySelector("body > div > div.game-wrapper > div.main > img.player");
@@ -270,10 +271,12 @@ function updateEnemyLaser($container) {
         const spaceship_rectangle = document.querySelector(".player").getBoundingClientRect();
         // If there is a collision between spaceship and enemy laser
         if (collideRect(spaceship_rectangle, enemyLaser_rectangle)) {
+            deleteLaser(enemyLasers, enemyLaser, enemyLaser.$enemyLaser);
             // deduct a life
             STATE.lives--;
+           lives.innerHTML = STATE.lives
             // When there is only 1 life left
-            if (STATE.lives == 1) {
+            if (STATE.lives == 0) {
                 // End the game
                 playSound("game_over");
                 STATE.gameOver = true;
