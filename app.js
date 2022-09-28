@@ -224,7 +224,7 @@ function updateLaser($container) {
     const lasers = STATE.lasers;
     for (let i = 0; i < lasers.length; i++) {
         const laser = lasers[i];
-        laser.y -= 2; // Laser speed
+        laser.y -= 5; // Laser speed
         if (laser.y < 0) {
             deleteLaser(lasers, laser, laser.$laser);
         }
@@ -263,7 +263,7 @@ function updateEnemyLaser($container) {
     const enemyLasers = STATE.enemyLasers;
     for (let i = 0; i < enemyLasers.length; i++) {
         const enemyLaser = enemyLasers[i];
-        enemyLaser.y += 2; // Enemy laser speed
+        enemyLaser.y += 4; // Enemy laser speed
         if (enemyLaser.y > GAME_HEIGHT - 30) {
             deleteLaser(enemyLasers, enemyLaser, enemyLaser.$enemyLaser);
         }
