@@ -70,10 +70,10 @@ function setSec() {
             document.getElementById("sec").innerHTML = sec;
         }
         sec = sec + 1;
-        secVar = setTimeout(setSec, 1000);
     }
-}
 
+    secVar = setTimeout(setSec, 1000);
+}
 function setMin() {
     if (!STATE.gamePaused) {
         if (min >= 60) {
@@ -88,7 +88,6 @@ function setMin() {
         min = min + 1;
     }
 }
-
 function setHour() {
     if (!STATE.gamePaused) {
         if (hour < 10) {
@@ -142,7 +141,6 @@ function collideRect(rect1, rect2) {
     }
 }
 
-// Enemy
 function createEnemy($container, x, y) {
     const $enemy = document.createElement("img");
     $enemy.src = "img/ufo.svg";
