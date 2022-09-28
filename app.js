@@ -3,6 +3,7 @@ const KEY_RIGHT = 68;
 const KEY_LEFT = 65;
 const KEY_SPACE = 32;
 const KEY_ESC = 27;
+const KEY_R = 82;
 
 // Game properties
 const GAME_WIDTH = 696;
@@ -23,7 +24,7 @@ const gameStateText = document.querySelector("body > div > div > p");
 const tutorialDiv = document.querySelector("#tutorial");
 const gameWrapper = document.querySelector("body > div > div.game-wrapper");
 const customisationDiv = document.querySelector("#customise");
-const lives = document.querySelector("#lives")
+const lives = document.querySelector("#lives");
 
 // Assets
 const spaceship = document.querySelector("body > div > div.game-wrapper > div.main > img.player");
@@ -59,55 +60,47 @@ const STATE = {
 // Timer functions
 function setSec() {
     if (!STATE.gamePaused) {
-    if (sec >= 60) {
-        setMin();
-        sec = 0;
-    }
-    if (sec < 10) {
-        document.getElementById("sec").innerHTML = "0" + sec;
-    } else {
-        document.getElementById("sec").innerHTML = sec;
-    }
+        if (sec >= 60) {
+            setMin();
+            sec = 0;
+        }
+        if (sec < 10) {
+            document.getElementById("sec").innerHTML = "0" + sec;
+        } else {
+            document.getElementById("sec").innerHTML = sec;
+        }
         sec = sec + 1;
+        secVar = setTimeout(setSec, 1000);
     }
-   
-    secVar = setTimeout(setSec, 1000);
 }
 
 function setMin() {
     if (!STATE.gamePaused) {
-    if (min >= 60) {
-        setHour();
-        min = 0;
-    }
-    if (min < 10) {
-        document.getElementById("min").innerHTML = "0" + min;
-    } else {
-        document.getElementById("min").innerHTML = min;
-    }
+        if (min >= 60) {
+            setHour();
+            min = 0;
+        }
+        if (min < 10) {
+            document.getElementById("min").innerHTML = "0" + min;
+        } else {
+            document.getElementById("min").innerHTML = min;
+        }
         min = min + 1;
     }
-   
 }
 
 function setHour() {
     if (!STATE.gamePaused) {
-    if (hour < 10) {
-        document.getElementById("hour").innerHTML = "0" + hour;
-    } else {
-        document.getElementById("hour").innerHTML = hour;
-    }
+        if (hour < 10) {
+            document.getElementById("hour").innerHTML = "0" + hour;
+        } else {
+            document.getElementById("hour").innerHTML = hour;
+        }
         hour = hour + 1;
     }
-  
 }
 
 // General purpose functions
-function unpauseGame() {
-    STATE.gamePaused = false;
-    menu.style.display = "none";
-}
-
 function setPosition($element, x, y) {
     $element.style.transform = `translate(${x}px, ${y}px)`;
 }
@@ -282,8 +275,11 @@ function updateEnemyLaser($container) {
         if (collideRect(spaceship_rectangle, enemyLaser_rectangle)) {
             deleteLaser(enemyLasers, enemyLaser, enemyLaser.$enemyLaser);
             // deduct a life
+            if (STATE.lives >= 2) {
+                playSound("lose_life");
+            }
             STATE.lives--;
-           lives.innerHTML = STATE.lives
+            lives.innerHTML = STATE.lives;
             // When there is only 1 life left
             if (STATE.lives == 0) {
                 // End the game
@@ -312,12 +308,29 @@ function KeyPress(event) {
     } else if (event.keyCode === KEY_LEFT) {
         STATE.move_left = true;
     } else if (event.keyCode === KEY_SPACE) {
-        STATE.shoot = true;
+        // Show customisation div if tutorial div is visible
+        if (tutorialDiv.style.display != "none") {
+            console.log("tutorial is visible");
+            showCustomisation();
+        } else if (customisationDiv.style.display != "none") {
+            startGame();
+        } else {
+            STATE.shoot = true;
+        }
     } else if (event.keyCode === KEY_ESC) {
         // only pause if user has completed tutorial
-        if (STATE.completedTutorial) {
+        if (STATE.completedTutorial && !STATE.gamePaused) {
             STATE.gamePaused = true;
             menu.style.display = "block";
+        } else {
+            console.log("game paused is false");
+            STATE.gamePaused = false;
+            menu.style.display = "none";
+        }
+    } else if (event.keyCode === KEY_R) {
+        // only unpause if user has completed tutorial
+        if (STATE.completedTutorial && STATE.gamePaused) {
+            restartGame();
         }
     }
 }

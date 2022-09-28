@@ -139,7 +139,7 @@ footer {
 
 .menu .button-group {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-evenly;
     margin-bottom: 8px;
 }
@@ -151,6 +151,10 @@ footer {
     text-align: center;
     animation-name: none;
     margin-bottom: 10px;
+}
+
+.menu .btn:nth-child(1) {
+    margin-bottom: 5px;
 }
 
 .menu button,
@@ -297,7 +301,7 @@ p {
 }
 
 #customise .player:hover {
-    outline: 3px solid #0c180f;
+    outline: 3px solid #34c346;
 }
 
 #customise .player: {
