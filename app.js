@@ -1,6 +1,6 @@
 // Keys
-const KEY_RIGHT = 68;
-const KEY_LEFT = 65;
+const KEY_LEFT = 37;
+const KEY_RIGHT = 39;
 const KEY_SPACE = 32;
 const KEY_ESC = 27;
 const KEY_R = 82;
@@ -25,9 +25,12 @@ const tutorialDiv = document.querySelector("#tutorial");
 const gameWrapper = document.querySelector("body > div > div.game-wrapper");
 const customisationDiv = document.querySelector("#customise");
 const lives = document.querySelector("#lives");
+const selected = document.querySelector("#player-wrapper > div.player.selected");
 
 // Assets
 const spaceship = document.querySelector("body > div > div.game-wrapper > div.main > img.player");
+const enemies = document.querySelectorAll("body > div > div.game-wrapper > div.main > img.enemy");
+const skins = document.querySelectorAll("#player-wrapper > div.player");
 
 function playSound(file) {
     const audio = new Audio("sounds/" + file + ".wav");
@@ -54,7 +57,10 @@ const STATE = {
     score: 0,
     elapsedTime: 0,
     completedTutorial: false,
-    lives: 3
+    lives: 3,
+    skinCount: 3,
+    skins: ["pink", "yellow", "green", "blue", "purple"],
+    activeSkin: ""
 };
 
 // Timer functions
@@ -127,12 +133,7 @@ function collideRect(rect1, rect2) {
     // Checks first if game is still in progress
     if (!STATE.gameOver && !STATE.gameWon) {
         // collision will equal true only if collision is detected
-        var collision = !(
-            rect2.left > rect1.right ||
-            rect2.right < rect1.left ||
-            rect2.top > rect1.bottom ||
-            rect2.bottom < rect1.top
-        );
+        var collision = !(rect2.left > rect1.right || rect2.right < rect1.left || rect2.top > rect1.bottom || rect2.bottom < rect1.top);
         // Checking if collision is true first before returning avoids continuous collision detection spam
         if (collision) {
             console.log("returned true");
@@ -299,18 +300,61 @@ function deleteLaser(lasers, laser, $laser) {
     }
 }
 
+function updatePlayerSkin(direction) {
+    if (direction == "left") {
+        STATE.skinCount--;
+        console.log(STATE.skinCount, STATE.skins[STATE.skinCount - 1]);
+
+        // Check all divs and remove selected class if it's found
+        for (let i = 0; i < STATE.skins.length; i++) {
+            // Check if div has selected class
+            if (document.querySelector("#player-wrapper > div.player." + STATE.skins[i] + "").classList.contains("selected")) {
+                document.querySelector("#player-wrapper > div.player." + STATE.skins[i] + "").classList.remove("selected");
+            }
+        }
+
+        // Add selected class to new skin div
+        document.querySelector("#player-wrapper > div.player." + STATE.skins[STATE.skinCount - 1] + "").classList.add("selected");
+    } else {
+        STATE.skinCount++;
+        console.log(STATE.skinCount, STATE.skins[STATE.skinCount - 1]);
+
+        // Check all divs and remove selected class if it's found
+        for (let i = 0; i < STATE.skins.length; i++) {
+            // Check if div has selected class
+            if (document.querySelector("#player-wrapper > div.player." + STATE.skins[i] + "").classList.contains("selected")) {
+                document.querySelector("#player-wrapper > div.player." + STATE.skins[i] + "").classList.remove("selected");
+            }
+        }
+
+        // Add selected class to new skin div
+        document.querySelector("#player-wrapper > div.player." + STATE.skins[STATE.skinCount - 1] + "").classList.add("selected");
+    }
+}
+
 // Key Presses
 function KeyPress(event) {
-    if (event.keyCode === KEY_RIGHT) {
-        STATE.move_right = true;
-    } else if (event.keyCode === KEY_LEFT) {
-        STATE.move_left = true;
+    if (event.keyCode === KEY_LEFT) {
+        if (customisationDiv.style.opacity != "0") {
+            if (STATE.skinCount !== 1) {
+                updatePlayerSkin("left");
+            }
+        } else {
+            STATE.move_left = true;
+        }
+    } else if (event.keyCode === KEY_RIGHT) {
+        if (customisationDiv.style.opacity != "0") {
+            if (STATE.skinCount !== 5) {
+                updatePlayerSkin("right");
+            }
+        } else {
+            STATE.move_right = true;
+        }
     } else if (event.keyCode === KEY_SPACE) {
         // Show customisation div if tutorial div is visible
-        if (tutorialDiv.style.display != "none") {
-            console.log("tutorial is visible");
+        if (tutorialDiv.style.opacity != "0") {
             showCustomisation();
-        } else if (customisationDiv.style.display != "none") {
+        } else if (customisationDiv.style.opacity != "0") {
             startGame();
         } else {
             STATE.shoot = true;
@@ -319,11 +363,11 @@ function KeyPress(event) {
         // only pause if user has completed tutorial
         if (STATE.completedTutorial && !STATE.gamePaused) {
             STATE.gamePaused = true;
-            menu.style.display = "block";
+            menu.style.opacity = "1";
         } else {
             console.log("game paused is false");
             STATE.gamePaused = false;
-            menu.style.display = "none";
+            menu.style.opacity = "0";
         }
     } else if (event.keyCode === KEY_R) {
         // only unpause if user has completed tutorial
@@ -368,8 +412,8 @@ function hideAllEntities($container) {
     }
 
     // Hide spaceship, banner and game window
-    document.querySelector("img.player").style.display = "none";
-    document.querySelector("body > div > header").style.display = "none";
+    document.querySelector("img.player").style.opacity = "0";
+    document.querySelector("body > div > header").style.opacity = "0";
     document.querySelector("body > div > div > div.main").style.display = "none";
 }
 
@@ -382,7 +426,7 @@ function gameWon() {
 
         // Set and display p tag
         gameStateText.innerHTML = "YOU WIN!";
-        gameStateText.style.display = "block";
+        gameStateText.style.opacity = "1";
 
         confetti({
             particleCount: 100,
@@ -401,13 +445,13 @@ function gameLost() {
     if (!STATE.gameWon) {
         hideAllEntities();
         gameStateText.innerHTML = "GAME OVER";
-        gameStateText.style.display = "block";
+        gameStateText.style.opacity = "1";
     }
 }
 
 // Main Update Function
 function update() {
-    if (!STATE.gamePaused && tutorialDiv.style.display === "none" && customisationDiv.style.display === "none") {
+    if (!STATE.gamePaused && tutorialDiv.style.opacity === "0" && customisationDiv.style.opacity === "0") {
         updatePlayer();
         updateEnemies($container);
         updateLaser($container);
@@ -430,7 +474,7 @@ function restartGame() {
 }
 
 function hidePauseMenu() {
-    menu.style.display = "none";
+    menu.style.opacity = "0";
 }
 
 function createEnemies($container) {
@@ -444,16 +488,30 @@ function createEnemies($container) {
 
 function showCustomisation() {
     // Hide tutorial div and show customisation div
-    tutorialDiv.style.display = "none";
-    customisationDiv.style.display = "flex";
+    tutorialDiv.style.opacity = "0";
+    customisationDiv.style.opacity = "1";
 }
 
 function startGame() {
-    // Hide customisation div and show banner/game div
+    // Set player skin
+    for (let i = 0; i < STATE.skins.length; i++) {
+        // Check which div has selected class
+        if (document.querySelector("#player-wrapper > div.player." + STATE.skins[i] + "").classList.contains("selected")) {
+            // Set activeSkin to div with selected class
+            STATE.activeSkin = STATE.skins[i];
+        }
+    }
+    document.querySelector("body > div > div.game-wrapper > div.main > img.player").src = "img/spaceship-" + STATE.activeSkin + ".png";
+
+    // Hide customisation div and show banner, game div, enemy/players
     STATE.completedTutorial = true;
-    customisationDiv.style.display = "none";
-    banner.style.display = "block";
-    gameWrapper.style.display = "flex";
+    customisationDiv.style.opacity = "0";
+    banner.style.opacity = "1";
+    gameWrapper.style.opacity = "1";
+    for (var i = 0; i < STATE.number_of_enemies; i++) {
+        document.querySelectorAll("img.enemy")[i].style.opacity = "1";
+    }
+    document.querySelector("img.player").style.opacity = "1";
     // Start timer
     setSec();
 }
