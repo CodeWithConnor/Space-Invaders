@@ -32,11 +32,6 @@ const spaceship = document.querySelector("body > div > div.game-wrapper > div.ma
 const enemies = document.querySelectorAll("body > div > div.game-wrapper > div.main > img.enemy");
 const skins = document.querySelectorAll("#player-wrapper > div.player");
 
-function playSound(file) {
-    const audio = new Audio("sounds/" + file + ".wav");
-    audio.play();
-}
-
 const STATE = {
     x_pos: 0,
     y_pos: 0,
@@ -62,6 +57,11 @@ const STATE = {
     skins: ["pink", "yellow", "green", "blue", "purple"],
     activeSkin: ""
 };
+
+function playSound(file) {
+    const audio = new Audio("sounds/" + file + ".wav");
+    audio.play();
+}
 
 // Timer functions
 function setSec() {
@@ -183,7 +183,6 @@ function createPlayer($container) {
     STATE.x_pos = GAME_WIDTH / 2;
     STATE.y_pos = GAME_HEIGHT - 50;
     const $player = document.createElement("img");
-    $player.src = "img/spaceship.svg";
     $player.className = "player";
     $container.appendChild($player);
     setPosition($player, STATE.x_pos, STATE.y_pos);
@@ -301,34 +300,36 @@ function deleteLaser(lasers, laser, $laser) {
 }
 
 function updatePlayerSkin(direction) {
-    if (direction == "left") {
-        STATE.skinCount--;
-        console.log(STATE.skinCount, STATE.skins[STATE.skinCount - 1]);
+    if (customisationDiv.style.opacity == "1") {
+        if (direction == "left") {
+            STATE.skinCount--;
+            console.log(STATE.skinCount, STATE.skins[STATE.skinCount - 1]);
 
-        // Check all divs and remove selected class if it's found
-        for (let i = 0; i < STATE.skins.length; i++) {
-            // Check if div has selected class
-            if (document.querySelector("#player-wrapper > div.player." + STATE.skins[i] + "").classList.contains("selected")) {
-                document.querySelector("#player-wrapper > div.player." + STATE.skins[i] + "").classList.remove("selected");
+            // Check all divs and remove selected class if it's found
+            for (let i = 0; i < STATE.skins.length; i++) {
+                // Check if div has selected class
+                if (document.querySelector("#player-wrapper > div.player." + STATE.skins[i] + "").classList.contains("selected")) {
+                    document.querySelector("#player-wrapper > div.player." + STATE.skins[i] + "").classList.remove("selected");
+                }
             }
-        }
 
-        // Add selected class to new skin div
-        document.querySelector("#player-wrapper > div.player." + STATE.skins[STATE.skinCount - 1] + "").classList.add("selected");
-    } else {
-        STATE.skinCount++;
-        console.log(STATE.skinCount, STATE.skins[STATE.skinCount - 1]);
+            // Add selected class to new skin div
+            document.querySelector("#player-wrapper > div.player." + STATE.skins[STATE.skinCount - 1] + "").classList.add("selected");
+        } else {
+            STATE.skinCount++;
+            console.log(STATE.skinCount, STATE.skins[STATE.skinCount - 1]);
 
-        // Check all divs and remove selected class if it's found
-        for (let i = 0; i < STATE.skins.length; i++) {
-            // Check if div has selected class
-            if (document.querySelector("#player-wrapper > div.player." + STATE.skins[i] + "").classList.contains("selected")) {
-                document.querySelector("#player-wrapper > div.player." + STATE.skins[i] + "").classList.remove("selected");
+            // Check all divs and remove selected class if it's found
+            for (let i = 0; i < STATE.skins.length; i++) {
+                // Check if div has selected class
+                if (document.querySelector("#player-wrapper > div.player." + STATE.skins[i] + "").classList.contains("selected")) {
+                    document.querySelector("#player-wrapper > div.player." + STATE.skins[i] + "").classList.remove("selected");
+                }
             }
-        }
 
-        // Add selected class to new skin div
-        document.querySelector("#player-wrapper > div.player." + STATE.skins[STATE.skinCount - 1] + "").classList.add("selected");
+            // Add selected class to new skin div
+            document.querySelector("#player-wrapper > div.player." + STATE.skins[STATE.skinCount - 1] + "").classList.add("selected");
+        }
     }
 }
 
