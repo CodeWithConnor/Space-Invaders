@@ -299,7 +299,6 @@ function collisionDetected(rect1, rect2) {
         var collision = !(rect2.left > rect1.right || rect2.right < rect1.left || rect2.top > rect1.bottom || rect2.bottom < rect1.top);
         // Checking if collision is true first before returning avoids continuous collision detection spam
         if (collision) {
-            console.log("returned true");
             return true;
         }
     }
@@ -309,8 +308,6 @@ function updatePlayerSkin(direction) {
     if (customisationDiv.style.opacity == "1") {
         if (direction == "left") {
             GAME.skinCount--;
-            console.log(GAME.skinCount, GAME.skins[GAME.skinCount - 1]);
-
             // Check all divs and remove selected class if it's found
             for (let i = 0; i < GAME.skins.length; i++) {
                 // Check if div has selected class
@@ -323,7 +320,6 @@ function updatePlayerSkin(direction) {
             document.querySelector("#player-wrapper > div.player." + GAME.skins[GAME.skinCount - 1] + "").classList.add("selected");
         } else {
             GAME.skinCount++;
-            console.log(GAME.skinCount, GAME.skins[GAME.skinCount - 1]);
 
             // Check all divs and remove selected class if it's found
             for (let i = 0; i < GAME.skins.length; i++) {
@@ -372,7 +368,6 @@ function KeyPress(event) {
             GAME.gamePaused = true;
             menu.style.opacity = "1";
         } else {
-            console.log("game paused is false");
             GAME.gamePaused = false;
             menu.style.opacity = "0";
         }
@@ -395,8 +390,6 @@ function KeyRelease(event) {
 }
 
 function hideAllEntities($container) {
-    hidePauseMenu();
-
     // Delete all enemy ufos
     const enemies = GAME.enemies;
     for (let i = 0; i < enemies.length; i++) {
@@ -418,7 +411,8 @@ function hideAllEntities($container) {
         deleteLaser(lasers, laser, laser.$laser);
     }
 
-    // Hide spaceship, banner and game window
+    // Hide pause menu, spaceship, banner and game window
+    menu.style.opacity = "0";
     document.querySelector("img.player").style.opacity = "0";
     document.querySelector("body > div > header").style.display = "none";
     document.querySelector("body > div > div > div.main").style.display = "none";
@@ -481,10 +475,6 @@ function update() {
     if (GAME.enemies.length == 0 && !GAME.gameOver) {
         gameComplete("win");
     }
-}
-
-function hidePauseMenu() {
-    menu.style.opacity = "0";
 }
 
 function createEnemies($container) {
