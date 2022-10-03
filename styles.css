@@ -1,6 +1,7 @@
 * {
     padding: 0;
     margin: 0;
+    /* border: 1px solid white; */
 }
 
 html {
@@ -41,7 +42,7 @@ body {
 }
 
 header {
-    opacity: 0;
+    display: none;
     width: 100vw;
     text-align: center;
     background: #101f14;
@@ -161,6 +162,25 @@ footer {
     text-align: center;
     animation-name: none;
     margin-bottom: 10px;
+}
+
+.game-finished {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.game-finished button {
+    text-align: center;
+    background: #34c346;
+    color: #101f14;
+    border: none;
+    border-radius: 10px;
+    width: 265px;
+    padding: 10px 20px;
+    font-size: 1.4em;
+    font-family: "VT323";
 }
 
 .menu .btn:nth-child(1) {
