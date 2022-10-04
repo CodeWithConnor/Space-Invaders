@@ -35,19 +35,19 @@ const enemies = document.querySelectorAll("body > div > div.game-wrapper > div.m
 const skins = document.querySelectorAll("#player-wrapper > div.player");
 
 const GAME = {
-    x_pos: 0,
-    y_pos: 0,
-    move_right: false,
-    move_left: false,
+    xPos: 0,
+    yPos: 0,
+    moveRight: false,
+    moveLeft: false,
     shoot: false,
     lasers: [],
     enemyLasers: [],
     enemies: [],
-    spaceship_width: 40,
-    enemy_width: 50,
+    spaceshipWidth: 40,
+    enemyWidth: 50,
     cooldown: 0,
-    number_of_enemies: 16,
-    enemy_cooldown: 0,
+    enemyCount: 16,
+    enemyCooldown: 0,
     gameOver: false,
     gameWon: false,
     gamePaused: false,
@@ -67,10 +67,10 @@ function createEnemy($container, x, y) {
     $enemy.src = "img/ufo.svg";
     $enemy.className = "enemy";
     $container.appendChild($enemy);
-    const enemy_cooldown = Math.floor(Math.random() * 100);
-    const enemy = { x, y, $enemy, enemy_cooldown };
+    const enemyCooldown = Math.floor(Math.random() * 100);
+    const enemy = { x, y, $enemy, enemyCooldown };
     GAME.enemies.push(enemy);
-    setSize($enemy, GAME.enemy_width);
+    setSize($enemy, GAME.enemyWidth);
     setPosition($enemy, x, y);
 }
 
@@ -90,40 +90,40 @@ function updateEnemies($container) {
             }
 
             enemy.cooldown = Math.random(0, 100);
-            if (enemy.enemy_cooldown == 0) {
+            if (enemy.enemyCooldown == 0) {
                 createEnemyLaser($container, a, b);
-                enemy.enemy_cooldown = Math.floor(Math.random() * 50) + 100;
+                enemy.enemyCooldown = Math.floor(Math.random() * 50) + 100;
             }
-            enemy.enemy_cooldown -= 0.5;
+            enemy.enemyCooldown -= 0.5;
         }
     }
 }
 
 // Player
 function createPlayer($container) {
-    GAME.x_pos = GAME_WIDTH / 2;
-    GAME.y_pos = GAME_HEIGHT - 50;
+    GAME.xPos = GAME_WIDTH / 2;
+    GAME.yPos = GAME_HEIGHT - 50;
     const $player = document.createElement("img");
     $player.className = "player";
     $container.appendChild($player);
-    setPosition($player, GAME.x_pos, GAME.y_pos);
-    setSize($player, GAME.spaceship_width);
+    setPosition($player, GAME.xPos, GAME.yPos);
+    setSize($player, GAME.spaceshipWidth);
 }
 
 function updatePlayer() {
-    if (GAME.move_left) {
-        GAME.x_pos -= 3;
+    if (GAME.moveLeft) {
+        GAME.xPos -= 3;
     }
-    if (GAME.move_right) {
-        GAME.x_pos += 3;
+    if (GAME.moveRight) {
+        GAME.xPos += 3;
     }
     // Only shoot if cooldown is 0 and game is not over
     if (GAME.shoot && GAME.cooldown == 0 && !GAME.gameOver) {
-        createLaser($container, GAME.x_pos - GAME.spaceship_width / 2, GAME.y_pos);
+        createLaser($container, GAME.xPos - GAME.spaceshipWidth / 2, GAME.yPos);
         GAME.cooldown = 30;
     }
     const $player = document.querySelector(".player");
-    setPosition($player, bound(GAME.x_pos), GAME.y_pos - 10);
+    setPosition($player, bound(GAME.xPos), GAME.yPos - 10);
     if (GAME.cooldown > 0) {
         GAME.cooldown -= 0.5;
     }
@@ -208,7 +208,7 @@ function updateEnemyLaser($container) {
                 }, 2650);
             }
         }
-        setPosition(enemyLaser.$enemyLaser, enemyLaser.x + GAME.enemy_width / 2, enemyLaser.y + 15);
+        setPosition(enemyLaser.$enemyLaser, enemyLaser.x + GAME.enemyWidth / 2, enemyLaser.y + 15);
     }
 }
 
@@ -279,12 +279,12 @@ function setSize($element, width) {
 }
 
 function bound(x) {
-    if (x >= GAME_WIDTH - GAME.spaceship_width) {
-        GAME.x_pos = GAME_WIDTH - GAME.spaceship_width;
-        return GAME_WIDTH - GAME.spaceship_width;
+    if (x >= GAME_WIDTH - GAME.spaceshipWidth) {
+        GAME.xPos = GAME_WIDTH - GAME.spaceshipWidth;
+        return GAME_WIDTH - GAME.spaceshipWidth;
     }
     if (x <= 0) {
-        GAME.x_pos = 0;
+        GAME.xPos = 0;
         return 0;
     } else {
         return x;
@@ -343,7 +343,7 @@ function KeyPress(event) {
                 updatePlayerSkin("left");
             }
         } else {
-            GAME.move_left = true;
+            GAME.moveLeft = true;
         }
     } else if (event.keyCode === KEY_RIGHT) {
         if (customisationDiv.style.opacity != "0") {
@@ -351,7 +351,7 @@ function KeyPress(event) {
                 updatePlayerSkin("right");
             }
         } else {
-            GAME.move_right = true;
+            GAME.moveRight = true;
         }
     } else if (event.keyCode === KEY_SPACE) {
         // Show customisation div if tutorial div is visible
@@ -381,9 +381,9 @@ function KeyPress(event) {
 
 function KeyRelease(event) {
     if (event.keyCode === KEY_RIGHT) {
-        GAME.move_right = false;
+        GAME.moveRight = false;
     } else if (event.keyCode === KEY_LEFT) {
-        GAME.move_left = false;
+        GAME.moveLeft = false;
     } else if (event.keyCode === KEY_SPACE) {
         GAME.shoot = false;
     }
@@ -478,10 +478,10 @@ function update() {
 }
 
 function createEnemies($container) {
-    for (var i = 0; i < GAME.number_of_enemies / 2; i++) {
+    for (var i = 0; i < GAME.enemyCount / 2; i++) {
         createEnemy($container, i * 80, 100);
     }
-    for (var i = 0; i < GAME.number_of_enemies / 2; i++) {
+    for (var i = 0; i < GAME.enemyCount / 2; i++) {
         createEnemy($container, i * 80, 180);
     }
 }
@@ -507,7 +507,7 @@ function startGame() {
     customisationDiv.style.opacity = "0";
     banner.style.display = "block";
     gameWrapper.style.opacity = "1";
-    for (var i = 0; i < GAME.number_of_enemies; i++) {
+    for (var i = 0; i < GAME.enemyCount; i++) {
         document.querySelectorAll("img.enemy")[i].style.opacity = "1";
     }
     document.querySelector("img.player").style.opacity = "1";
@@ -519,7 +519,7 @@ function startGame() {
 const $container = document.querySelector(".main");
 createPlayer($container);
 createEnemies($container);
-enemyCount.innerHTML = GAME.number_of_enemies;
+enemyCount.innerHTML = GAME.enemyCount;
 
 // Key Press Event Listener
 body.addEventListener("keydown", KeyPress);
