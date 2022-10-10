@@ -9,12 +9,6 @@ const KEY_R = 82;
 const GAME_WIDTH = 696;
 const GAME_HEIGHT = 600;
 
-// Timer
-var sec = 0,
-    min = 1,
-    hour = 1;
-var secVar, minVar, hourVar;
-
 // UI
 const body = document.querySelector("body");
 const banner = document.querySelector("body > div > header");
@@ -28,6 +22,10 @@ const customisationDiv = document.querySelector("#customise");
 const lives = document.querySelector("#lives");
 const selected = document.querySelector("#player-wrapper > div.player.selected");
 const gameFinishedDiv = document.querySelector("body > div > div.game-wrapper > div.game-finished");
+
+// UI Visibility
+tutorialVisible = true;
+customisationVisible = false;
 
 // Assets
 const spaceship = document.querySelector("body > div > div.game-wrapper > div.main > img.player");
@@ -226,48 +224,6 @@ function playSound(file) {
     audio.play();
 }
 
-// Timer functions
-function setSec() {
-    if (!GAME.gamePaused) {
-        if (sec >= 60) {
-            setMin();
-            sec = 0;
-        }
-        if (sec < 10) {
-            document.getElementById("sec").innerHTML = "0" + sec;
-        } else {
-            document.getElementById("sec").innerHTML = sec;
-        }
-        sec = sec + 1;
-    }
-
-    secVar = setTimeout(setSec, 1000);
-}
-function setMin() {
-    if (!GAME.gamePaused) {
-        if (min >= 60) {
-            setHour();
-            min = 0;
-        }
-        if (min < 10) {
-            document.getElementById("min").innerHTML = "0" + min;
-        } else {
-            document.getElementById("min").innerHTML = min;
-        }
-        min = min + 1;
-    }
-}
-function setHour() {
-    if (!GAME.gamePaused) {
-        if (hour < 10) {
-            document.getElementById("hour").innerHTML = "0" + hour;
-        } else {
-            document.getElementById("hour").innerHTML = hour;
-        }
-        hour = hour + 1;
-    }
-}
-
 // General purpose functions
 function setPosition($element, x, y) {
     $element.style.transform = `translate(${x}px, ${y}px)`;
@@ -355,9 +311,11 @@ function KeyPress(event) {
         }
     } else if (event.keyCode === KEY_SPACE) {
         // Show customisation div if tutorial div is visible
-        if (tutorialDiv.style.opacity != "0") {
+        if (tutorialVisible) {
+            console.log("tutorial is visible");
             showCustomisation();
-        } else if (customisationDiv.style.opacity != "0") {
+        } else if (customisationVisible) {
+            console.log("customisation is visible");
             startGame();
         } else {
             GAME.shoot = true;
@@ -429,16 +387,15 @@ function showGameText(result) {
 }
 
 function gameComplete(result) {
-    // Play sound if not already played
     if (!GAME.gameWonSoundPlayed && result == "win") {
         playSound("win");
-        confetti({
-            particleCount: 100,
-            spread: 70,
-            origin: {
-                y: 0.6
-            }
-        });
+        // confetti({
+        //     particleCount: 100,
+        //     spread: 70,
+        //     origin: {
+        //         y: 0.6
+        //     }
+        // });
         GAME.gameWonSoundPlayed = true;
     } else if (!GAME.gameLostSoundPlayed && result == "lose") {
         playSound("game_over");
@@ -447,19 +404,19 @@ function gameComplete(result) {
 
     if (result == "win") {
         hideAllEntities();
-        showGameText("win");
+        showGameText(result);
         setTimeout(() => {
             window.location.reload();
         }, 4950);
     } else if (result == "lose") {
         hideAllEntities();
-        showGameText("lose");
+        showGameText(result);
     }
 }
 
 // Main Update Function
 function update() {
-    if (!GAME.gamePaused && tutorialDiv.style.opacity === "0" && customisationDiv.style.opacity === "0") {
+    if (!GAME.gamePaused && !tutorialVisible && !customisationVisible) {
         updatePlayer();
         updateEnemies($container);
         updateLaser($container);
@@ -489,9 +446,54 @@ function createEnemies($container) {
 function showCustomisation() {
     tutorialDiv.style.opacity = "0";
     customisationDiv.style.opacity = "1";
+    tutorialVisible = false;
+    customisationVisible = true;
+}
+
+var lastTime = new Date().getTime();
+var displayNode = document.getElementById("display");
+var seconds = -1;
+var minutes = 0;
+var hours = 0;
+
+function timer() {
+    window.requestAnimationFrame(timer);
+
+    // Only start the timer if: tutorial is complete, customisation is complete and game is not paused
+    if (!GAME.gamePaused) {
+        var currentTime = new Date().getTime();
+
+        if (currentTime - lastTime >= 1000) {
+            lastTime = currentTime;
+            seconds++;
+
+            // If second is less than 1 minute (10 seconds)
+            if (seconds < 60) {
+                if (seconds < 10) {
+                    document.querySelector("#sec").innerText = "0" + seconds;
+                } else {
+                    document.querySelector("#sec").innerText = seconds;
+                }
+            } else {
+                seconds = 0;
+                document.querySelector("#sec").innerText = "00";
+                minutes++;
+
+                if (minutes < 60) {
+                    if (minutes < 10) {
+                        document.querySelector("#min").innerText = "0" + minutes;
+                    } else {
+                        document.querySelector("#min").innerText = minutes;
+                    }
+                }
+            }
+        }
+    }
 }
 
 function startGame() {
+    customisationVisible = false;
+
     // Set player skin
     for (let i = 0; i < GAME.skins.length; i++) {
         // Check which div has selected class
@@ -512,7 +514,7 @@ function startGame() {
     }
     document.querySelector("img.player").style.opacity = "1";
     // Start timer
-    setSec();
+    timer();
 }
 
 // Initialize the Game
@@ -527,5 +529,4 @@ body.addEventListener("keyup", KeyRelease);
 
 update();
 
-// for each animation frame, add 1
-// 60 = 1 sec
+// check for lasers y position

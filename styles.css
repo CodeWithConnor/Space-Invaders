@@ -1,7 +1,7 @@
 * {
     padding: 0;
     margin: 0;
-    /* border: 1px solid white; */
+    border: 1px solid white;
 }
 
 html {
@@ -94,6 +94,7 @@ footer {
 .main .enemy {
     position: absolute;
     opacity: 0;
+    border-radius: 50%;
 }
 
 .main .player {
@@ -105,6 +106,8 @@ footer {
     margin-left: -2.5px;
     height: 30px;
     z-index: -1;
+    width: 1px;
+    height: 1px;
 }
 
 .lose {
@@ -354,7 +357,6 @@ p {
 }
 
 /* Elapsed timer */
-#hour::after,
 #min::after {
     content: ":";
 }
