@@ -62,7 +62,7 @@ const GAME = {
 
 function createEnemy($container, x, y) {
     const $enemy = document.createElement("img");
-    $enemy.src = "img/ufo.svg";
+    $enemy.src = "img/ufo.png";
     $enemy.className = "enemy";
     $container.appendChild($enemy);
     const enemyCooldown = Math.floor(Math.random() * 100);
@@ -311,11 +311,9 @@ function KeyPress(event) {
         }
     } else if (event.keyCode === KEY_SPACE) {
         // Show customisation div if tutorial div is visible
-        if (tutorialVisible) {
-            console.log("tutorial is visible");
+        if (tutorialDiv.style.opacity != "0") {
             showCustomisation();
-        } else if (customisationVisible) {
-            console.log("customisation is visible");
+        } else if (customisationDiv.style.opacity != "0") {
             startGame();
         } else {
             GAME.shoot = true;
@@ -528,5 +526,3 @@ body.addEventListener("keydown", KeyPress);
 body.addEventListener("keyup", KeyRelease);
 
 update();
-
-// check for lasers y position
