@@ -2,7 +2,7 @@
 const KEY_LEFT = 37;
 const KEY_RIGHT = 39;
 const KEY_SPACE = 32;
-const KEY_ESC = 27;
+const KEY_ESC = 27
 const KEY_R = 82;
 
 // Game properties
@@ -387,13 +387,13 @@ function showGameText(result) {
 function gameComplete(result) {
     if (!GAME.gameWonSoundPlayed && result == "win") {
         playSound("win");
-        confetti({
-            particleCount: 100,
-            spread: 70,
-            origin: {
-                y: 0.6
-            }
-        });
+        // confetti({
+        //     particleCount: 100,
+        //     spread: 70,
+        //     origin: {
+        //         y: 0.6
+        //     }
+        // });
         GAME.gameWonSoundPlayed = true;
     } else if (!GAME.gameLostSoundPlayed && result == "lose") {
         playSound("game_over");
