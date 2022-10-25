@@ -1,5 +1,11 @@
 ## Space Invaders
 
+### How To Run
+
+Please clone the repo and then open the index.html file in your web browser.
+
+### About The Project
+
 - No frameworks or canvas used, the game is implemented using plain JS/DOM and HTML only
 - Game runs at **60 FPS** at all times
 - No frame drops!
