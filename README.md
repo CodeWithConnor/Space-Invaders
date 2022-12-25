@@ -1,44 +1,16 @@
-## Space Invaders
+# Space Invaders
 
-### How To Run
+A classic space invaders game implemented with HTML, CSS and JavaScript. The game runs smoothly at 60 FPS with no frame drops, thanks to the use of the `requestAnimationFrame` method and thorough optimisations.
 
-Please clone the repo and then open the index.html file in your web browser.
+In addition to the classic gameplay, this project also includes added skin customisation, a pause menu and score board that displays the timer, current score, and remaining lives.
 
-### About The Project
+Whilst working on this project, I had the opportunity to learn about and practice various web development concepts and technologies, including:
 
-- No frameworks or canvas used, the game is implemented using plain JS/DOM and HTML only
-- Game runs at **60 FPS** at all times
-- No frame drops!
-- Uses **RequestAnimationFrame**
-- Written with performance in mind
-- Pause menu, that includes:
-  - Continue
-  - Restart
-- A score board that displays the following metrics:
-  - **Timer** that indicates the amount of time the game has been running
-  - **Score** that displays the current score (points)
-  - **Lives** that shows the number of lives that the player has left
+- DOM manipulation
+- Event loops
+- FPS optimization
+- CSS transform and opacity properties
+- Web performance optimization using developer tools on Firefox and Chrome
+- Tasks such as JavaScript execution, style calculation, layout, painting and compositing
 
-### Dev Tools
-
-In order to measure performance and ensure that the code is as efficient as possible, I periodically used the developer tools to:
-
-- Record the webpage using the performance tab, check for frame drops, check how much time each function took to execute, and other useful metrics monitoring such as the paint flashing and layer options.
-
-## This project helped me learn about:
-
-- [`requestAnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame)
-- [Event loop](https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop)
-- FPS
-- DOM
-- [Jank/stutter animation](https://murtada.nl/blog/going-jank-free-achieving-60-fps-smooth-websites)
-- [Transform](https://developer.mozilla.org/en-US/docs/Web/CSS/transform)/ [opacity](https://developer.mozilla.org/en-US/docs/Web/CSS/opacity)
-- Tasks
-  - JavaScript
-  - Styles
-  - Layout
-  - Painting
-  - Compositing
-- Developer Tools
-  - [Firefox](https://developer.mozilla.org/en-US/docs/Learn/Common_questions/What_are_browser_developer_tools)
-  - [Chrome](https://developers.google.com/web/tools/chrome-devtools)
+To play the game, simply clone the repo and open the `index.html` file in your web browser.
