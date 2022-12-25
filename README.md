@@ -2,7 +2,7 @@
 
 A classic space invaders game implemented with HTML, CSS and JavaScript. The game runs smoothly at 60 FPS with no frame drops, thanks to the use of the `requestAnimationFrame` method and thorough optimisations.
 
-In addition to the classic gameplay, this project also includes added skin customisation, a pause menu and score board that displays the timer, current score, and remaining lives.
+In addition to the classic gameplay, this project also includes added skin customisation, a pause menu and score banner that displays the timer, current score, and remaining lives.
 
 Whilst working on this project, I had the opportunity to learn about and practice various web development concepts and technologies, including:
 
